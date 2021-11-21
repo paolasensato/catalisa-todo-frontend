@@ -11,15 +11,20 @@ const LocalStorageHelper = {
         window.localStorage.removeItem('USER_TOKEN');
     },
     isAuthenticated() {
-        const token = LocalStorageHelper.getToken();
+        try {
+            const token = LocalStorageHelper.getToken();
 
-        if (!token) return true;
+            if (!token) return true;
+            const payload = JwtDecode(token);
 
-        const payload = JwtDecode(token);
+            const expirationDate = new Date(payload.exp * 1000);
+            const currentDate = new Date();
 
-        console.log({ payload });
-
-        return true;
+            return expirationDate > currentDate;
+        } catch (error) {
+            console.warn(error);
+            return false;
+        }
     },
 };
 

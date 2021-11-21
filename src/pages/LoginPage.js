@@ -69,7 +69,7 @@ const LoginPage = () => {
       <Row
         justify="center"
       >
-        <Col xs={24} sl={12} md={10} lg={8} xl={6}>
+        <Col xs={24} sl={14} md={12} lg={10} xl={8}>
           <Card style={{ margin: 24 }}>
             <div style={{ textAlign: 'center' }}>
               <img
@@ -95,6 +95,7 @@ const LoginPage = () => {
                 onChange={handleInputChange}
                 validate={validateEmail}
                 disabled={loading}
+                required
               />
 
               <InputText
@@ -105,6 +106,7 @@ const LoginPage = () => {
                 onChange={handleInputChange}
                 validate={validatePassword}
                 disabled={loading}
+                required
               />
 
               <Button

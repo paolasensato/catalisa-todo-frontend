@@ -2,7 +2,7 @@ import { Form, Input } from 'antd';
 import { useState } from 'react';
 
 const InputText = (props) => {
-  const { label, onChange, validate, ...others } = props;
+  const { label, onChange, validate, required, ...others } = props;
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [changed, setChanged] = useState(null);
@@ -36,8 +36,9 @@ const InputText = (props) => {
       label={label}
       help={errorMessage}
       hasFeedback={changed}
+      required={required}
     >
-      <Input {...others} onChange={handleValidation} />
+      <Input {...others} required={required} onChange={handleValidation} />
     </Form.Item>
   );
 }
