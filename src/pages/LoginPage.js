@@ -42,7 +42,7 @@ const LoginPage = () => {
       if (response?.status === 401) {
         Modal.error({
           title: response.data.mensagem,
-        })
+        });
       }else{
         Modal.error({
           title: 'Não foi possível entrar no momento, tente novamente mais tarde.'
@@ -60,11 +60,6 @@ const LoginPage = () => {
       [name]: value,
     });
   };
-  // console.log(formValues)
-
-
-
-  // console.log('formValues',formValues);
   return (
     <Content>
       <Row

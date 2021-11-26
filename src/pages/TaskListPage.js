@@ -62,8 +62,6 @@ const TaskListPage = () => {
                                 return concluida ? '✅' : '❌';
                             }}
                         />
-
-
                     </Table>
                 </Col>
 

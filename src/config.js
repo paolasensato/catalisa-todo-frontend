@@ -7,4 +7,4 @@ axios.defaults.baseURL = 'https://catalisa-todo-backend.lab.smarppy.com';
 axios.interceptors.request.use((request) =>{
     request.headers.token = localStorageHelper.getToken();
     return request;
-})
+});
