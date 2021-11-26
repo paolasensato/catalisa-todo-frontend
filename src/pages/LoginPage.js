@@ -17,21 +17,19 @@ const { Title } = Typography;
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState('')
+  const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = useCallback(async () => {
+  const{ email , password} = formValues
+  const disableSubmit = !email || !password ;
+
+  const handleLogin = async () => {
     try {
-      setLoading(true);
-
-      const { email, password } = formValues;
-
-      if (!email || !password) return;
-
+      setLoading(true)
       const body = {
         email: email,
         senha: password,
-      }
+      };
 
       const response = await axios.post('/usuarios/login', body);
 
@@ -43,27 +41,30 @@ const LoginPage = () => {
       const { response } = error;
       if (response?.status === 401) {
         Modal.error({
-          title: response.data.mensagem
-        });
-      } else {
+          title: response.data.mensagem,
+        })
+      }else{
         Modal.error({
-          title: 'Não foi possível efetuar login, tente novamente mais tarde.'
+          title: 'Não foi possível entrar no momento, tente novamente mais tarde.'
         })
       }
-    } finally {
+    }finally{
       setLoading(false);
     }
-  }, [formValues, navigate]);
-
-  const handleInputChange = useCallback((event) => {
+  };
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
-
+    // console.log(name, value);
     setFormValues({
       ...formValues,
       [name]: value,
-    })
-  }, [formValues]);
+    });
+  };
+  // console.log(formValues)
 
+
+
+  // console.log('formValues',formValues);
   return (
     <Content>
       <Row
@@ -89,37 +90,39 @@ const LoginPage = () => {
 
             <Form layout="vertical">
               <InputText
-                name="email"
-                label="E-mail"
-                size="large"
+                name="email"//nome do campo requirido
+                label="E-mail"//o que o usuario vê para saber o nome do campo
+                size="large"//deixa o campo maior
+                validate={validateEmail}//validando o email
                 onChange={handleInputChange}
-                validate={validateEmail}
-                disabled={loading}
+                disabled = {loading}
                 required
               />
-
               <InputText
                 name="password"
-                label="Senha"
-                type="password"
+                label="senha"
                 size="large"
-                onChange={handleInputChange}
                 validate={validatePassword}
+                type="password"//deixa a senha "escondida"
+                onChange={handleInputChange}
                 disabled={loading}
                 required
               />
-
               <Button
-                block
-                type="primary"
+                block //faz ficar no tamanho do form
+                type="primary"//mudou a cor para azul
                 size="large"
+                loading = {loading}
                 onClick={handleLogin}
-                loading={loading}
+                disabled={disableSubmit}
               >
                 Entrar
               </Button>
 
-              <Link to="/subscription" className="ant-btn ant-btn-link ant-btn-lg ant-btn-block">
+              <Link
+                to="/subscription"
+                className="ant-btn ant-btn-link ant-btn-lg ant-btn-block"
+              >
                 Cadastre-se
               </Link>
             </Form>
