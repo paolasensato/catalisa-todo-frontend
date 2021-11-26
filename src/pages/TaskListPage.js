@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layout, Row, Col, Table, Modal } from "antd";
+import { Layout, Row, Col, Table, Modal, Button } from "antd";
 import axios from "axios";
 const { Content } = Layout;
 
@@ -27,6 +27,34 @@ const TaskListPage = () => {
     useEffect(() => {
         requestTasks();
     }, []);
+
+    const completeTask = async (taskId) => {
+        // console.log('clicou', taskId);
+        try {
+            setLoading(true);
+            await axios.put('/tarefas/' + taskId + '/conclusao')
+            await requestTasks();
+        } catch (error) {
+            console.warn(error);
+            Modal.error({
+                title: "Não foi possível concluir a tarefa, tente novamente mais tarde."
+            })
+
+        } finally {
+            setLoading(false);
+        }
+    };
+    const renderCompleteTask = (concluida, task) => {
+        return (
+            <Button
+                onClick={() => {
+                    completeTask(task.id);
+                }}
+            >
+                {concluida ? '✅' : '❌'}
+            </Button>
+        );
+    };
     return (
         <Content>
             <Row gutter={[24, 24]} justify="center">
@@ -58,9 +86,7 @@ const TaskListPage = () => {
                             title="Concluída"
                             dataIndex="concluida"
                             key="concluida"
-                            render={concluida => {
-                                return concluida ? '✅' : '❌';
-                            }}
+                            render={renderCompleteTask}
                         />
                     </Table>
                 </Col>
