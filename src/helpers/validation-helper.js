@@ -23,9 +23,3 @@ export const validateTitulo = (text) => {
         ? undefined
         : 'O título deve possuir de 1 a 300 caracteres'
 };
-
-export const validateConcluida = (boolean) => {
-    return boolean
-        ? undefined
-        : 'O título deve possuir de 1 a 300 caracteres'
-};

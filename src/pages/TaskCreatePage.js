@@ -15,13 +15,13 @@ const { Title } = Typography;
 
 
 const TaskCreatePage = () => {
-    const [formValues, setFormValues] = useState('')
+    const [formValues, setFormValues] = useState({concluida: false, titulo: ''})
     const [loading, setLoading] = useState(false);
 
     const handleSubscription = useCallback(async () => {
         try {
             setLoading(true);
-            console.log({formValues});
+            console.log({ formValues });
             const { titulo, concluida } = formValues;
             // console.log(titulo, concluida);
             if (!titulo) return;
@@ -52,7 +52,7 @@ const TaskCreatePage = () => {
     }, [formValues]);
 
     const handleInputChange = useCallback((event) => {
-        const {value } = event.target;
+        const { value } = event.target;
         // console.log({titulo,value});
         setFormValues({
             ...formValues,
@@ -60,14 +60,14 @@ const TaskCreatePage = () => {
         })
     }, [formValues]);
 
-    const handleInputCheckbox = useCallback((event) =>{
-        const {checked} = event.target;
+    const handleInputCheckbox = useCallback((event) => {
+        const { checked } = event.target;
         console.log(checked);
         setFormValues({
             ...formValues,
             concluida: checked,
         })
-    },[formValues])
+    }, [formValues])
 
     return (
         <Content>
@@ -94,15 +94,15 @@ const TaskCreatePage = () => {
                                 required
                             />
                             <Checkbox
-                                title= "Concluida"
+                                title="Concluida"
                                 dataIndex="concluida"
                                 key="concluida"
                                 onChange={handleInputCheckbox}
-                                // render={}
+                            // render={}
                             >
                                 Concluida
                             </Checkbox>
-                    
+
                             <Button
                                 block
                                 type="primary"
