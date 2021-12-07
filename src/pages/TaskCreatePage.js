@@ -1,7 +1,7 @@
 import {
     Button, Card,
     Col, Form, Layout, Row,
-    Typography, Modal
+    Typography, Modal, Checkbox
 } from 'antd';
 import { useCallback, useState } from 'react';
 import axios from 'axios';
@@ -21,13 +21,14 @@ const TaskCreatePage = () => {
     const handleSubscription = useCallback(async () => {
         try {
             setLoading(true);
-
+            console.log({formValues});
             const { titulo, concluida } = formValues;
-
-            if (!titulo || !concluida) return;
+            // console.log(titulo, concluida);
+            if (!titulo) return;
 
             const body = {
                 titulo: titulo,
+                concluida: concluida
             }
             await axios.post('/tarefas', body);
             Modal.success({
@@ -51,13 +52,22 @@ const TaskCreatePage = () => {
     }, [formValues]);
 
     const handleInputChange = useCallback((event) => {
-        const { titulo, value } = event.target;
-
+        const {value } = event.target;
+        // console.log({titulo,value});
         setFormValues({
             ...formValues,
-            [titulo]: value,
+            titulo: value,
         })
     }, [formValues]);
+
+    const handleInputCheckbox = useCallback((event) =>{
+        const {checked} = event.target;
+        console.log(checked);
+        setFormValues({
+            ...formValues,
+            concluida: checked,
+        })
+    },[formValues])
 
     return (
         <Content>
@@ -83,6 +93,16 @@ const TaskCreatePage = () => {
                                 disabled={loading}
                                 required
                             />
+                            <Checkbox
+                                title= "Concluida"
+                                dataIndex="concluida"
+                                key="concluida"
+                                onChange={handleInputCheckbox}
+                                // render={}
+                            >
+                                Concluida
+                            </Checkbox>
+                    
                             <Button
                                 block
                                 type="primary"
