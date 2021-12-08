@@ -23,3 +23,8 @@ export const validateTitulo = (text) => {
         ? undefined
         : 'O título deve possuir de 1 a 300 caracteres'
 };
+export const validateCategoria = (text) => {
+    return text?.length >= 1 && text?.length <= 200
+        ? undefined
+        : 'O nome deve possuir de 1 a 200 caracteres'
+};

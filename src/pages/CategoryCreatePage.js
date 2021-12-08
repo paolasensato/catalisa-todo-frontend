@@ -1,38 +1,33 @@
 import {
-    Button, Card,
-    Col, Form, Layout, Row,
-    Typography, Modal, Checkbox
+    Layout, Row, Col, Card, Typography, Form, Button, Modal
 } from 'antd';
 import { useCallback, useState } from 'react';
 import axios from 'axios';
 
 import InputText from '../components/InputText';
-import { validateTitulo } from '../helpers/validation-helper';
-
+import { validateCategoria } from '../helpers/validation-helper';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-
-const TaskCreatePage = () => {
-    const [formValues, setFormValues] = useState({concluida: false, titulo: ''});
+const CategoryCreatePage = () => {
+    const [formValues, setFormValues] = useState('')
     const [loading, setLoading] = useState(false);
 
-    const handleSubscription = useCallback(async () => {
+    const handleRegistration = useCallback(async () => {
         try {
             setLoading(true);
-            // console.log({ formValues });
-            const { titulo, concluida } = formValues;
-            // console.log(titulo, concluida);
-            if (!titulo) return;
+
+            const { nome } = formValues;
+
+            if (!nome) return;
 
             const body = {
-                titulo: titulo,
-                concluida: concluida
+                nome: nome,
             }
-            await axios.post('/tarefas', body);
+            await axios.post('/tarefas/categorias', body);
             Modal.success({
-                title: 'Tarefa cadastrada com sucesso.',
+                title: 'Categoria cadastrada com sucesso.'
             })
         } catch (error) {
             console.warn(error);
@@ -49,25 +44,16 @@ const TaskCreatePage = () => {
         } finally {
             setLoading(false);
         }
-    }, [formValues]);
+    }, [formValues])
 
     const handleInputChange = useCallback((event) => {
         const { value } = event.target;
-        // console.log({titulo,value});
+
         setFormValues({
             ...formValues,
-            titulo: value,
+            nome: value,
         })
     }, [formValues]);
-
-    const handleInputCheckbox = useCallback((event) => {
-        const { checked } = event.target;
-        console.log(checked);
-        setFormValues({
-            ...formValues,
-            concluida: checked,
-        })
-    }, [formValues])
 
     return (
         <Content>
@@ -81,33 +67,23 @@ const TaskCreatePage = () => {
                             type="primary"
                             style={{ textAlign: 'center', marginTop: 8 }}
                         >
-                            Cadastrar tarefa
+                            Cadastrar Categoria
                         </Title>
                         <Form layout="vertical">
                             <InputText
-                                name="titulo"
-                                label="Titulo"
+                                name="nome"
+                                label="Nome"
                                 size="large"
                                 onChange={handleInputChange}
-                                validate={validateTitulo}
+                                validate={validateCategoria}
                                 disabled={loading}
                                 required
                             />
-                            <Checkbox
-                                title="Concluida"
-                                dataIndex="concluida"
-                                key="concluida"
-                                onChange={handleInputCheckbox}
-                            // render={}
-                            >
-                                Concluida
-                            </Checkbox>
-
                             <Button
                                 block
                                 type="primary"
                                 size="large"
-                                onClick={handleSubscription}
+                                onClick={handleRegistration}
                                 loading={loading}
                             >
                                 Cadastrar
@@ -120,4 +96,4 @@ const TaskCreatePage = () => {
     );
 }
 
-export default TaskCreatePage;
+export default CategoryCreatePage;

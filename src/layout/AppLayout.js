@@ -16,6 +16,14 @@ const MENU_ITEMS = [
     path: '/tasks/new',
     label: 'Nova tarefa',
   },
+  {
+    path: '/category',
+    label: 'Minhas categorias'
+  },
+  {
+    path: '/category/new',
+    label: 'Nova categoria'
+  }
 ];
 
 const AppLayout = ({ children }) => {
