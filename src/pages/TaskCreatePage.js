@@ -1,5 +1,5 @@
 import {
-    Button, Card,
+    Button, Card, Input,
     Col, Form, Layout, Row,
     Typography, Modal, Checkbox
 } from 'antd';
@@ -10,7 +10,7 @@ import InputText from '../components/InputText';
 import { validateTitulo } from '../helpers/validation-helper';
 
 
-const { Content } = Layout;
+const { Content} = Layout;
 const { Title } = Typography;
 
 
@@ -22,13 +22,14 @@ const TaskCreatePage = () => {
         try {
             setLoading(true);
             // console.log({ formValues });
-            const { titulo, concluida } = formValues;
+            const { titulo, concluida, categoria_id } = formValues;
             // console.log(titulo, concluida);
             if (!titulo) return;
 
             const body = {
                 titulo: titulo,
-                concluida: concluida
+                concluida: concluida,
+                categoria_id: categoria_id
             }
             await axios.post('/tarefas', body);
             Modal.success({
@@ -59,6 +60,14 @@ const TaskCreatePage = () => {
             titulo: value,
         })
     }, [formValues]);
+    const handleInputChangeCategory = useCallback((event) => {
+        const { value } = event.target;
+        // console.log({titulo,value});
+        setFormValues({
+            ...formValues,
+            categoria_id: value,
+        })
+    }, [formValues]);
 
     const handleInputCheckbox = useCallback((event) => {
         const { checked } = event.target;
@@ -84,24 +93,32 @@ const TaskCreatePage = () => {
                             Cadastrar tarefa
                         </Title>
                         <Form layout="vertical">
-                            <InputText
-                                name="titulo"
-                                label="Titulo"
+                                <InputText
+                                    name="titulo"
+                                    label="Titulo"
+                                    size="large"
+                                    onChange={handleInputChange}
+                                    validate={validateTitulo}
+                                    disabled={loading}
+                                    required
+                                />
+                                <Checkbox
+                                    title="Concluida"
+                                    dataIndex="concluida"
+                                    key="concluida"
+                                    onChange={handleInputCheckbox}
+                                // render={}
+                                >
+                                    Concluida
+                                </Checkbox>
+                            <Input
+                                name="categoria_id"
+                                label="Id da Categoria"
                                 size="large"
-                                onChange={handleInputChange}
+                                onChange={handleInputChangeCategory}
                                 validate={validateTitulo}
                                 disabled={loading}
-                                required
                             />
-                            <Checkbox
-                                title="Concluida"
-                                dataIndex="concluida"
-                                key="concluida"
-                                onChange={handleInputCheckbox}
-                            // render={}
-                            >
-                                Concluida
-                            </Checkbox>
 
                             <Button
                                 block
