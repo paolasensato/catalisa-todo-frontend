@@ -61,7 +61,7 @@ const TaskCreatePage = () => {
     const loadCategoriesOptions = useCallback(async () => {
         try {
             setLoadingCategories(true);
-            const { data } = await axios.get('/tarefas/categorias');
+            const { data } = await axios.get('/tarefas/categorias/');
             setCategoriesOptions(data.map(category => ({
                 value: category.id,
                 title: category.nome,

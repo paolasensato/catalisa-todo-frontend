@@ -76,7 +76,7 @@ const TaskListPage = () => {
             setLoading(false);
         }
     };
-    const renderDeleteTask = (task) => {
+    const renderDeleteTask = (deletar, task) => {
         return (
             <Button
                 onClick={() => {
@@ -87,6 +87,8 @@ const TaskListPage = () => {
             </Button>
         )
     }
+
+
     return (
         <Content>
             <Row gutter={[24, 24]} justify="center">
