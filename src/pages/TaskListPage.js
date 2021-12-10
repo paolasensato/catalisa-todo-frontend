@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { Layout, Row, Col, Table, Modal, Button } from "antd";
+import { Layout, Row, Col, Table, Modal, Button} from "antd";
+import { DeleteOutlined } from '@ant-design/icons';
 import axios from "axios";
-const { Content } = Layout;
+const { Content} = Layout;
 
 const { Column } = Table;
 
@@ -61,6 +62,32 @@ const TaskListPage = () => {
         return categoria?.nome
     }, [])
 
+    const deleteTask = async (taskId) => {
+        try {
+            setLoading(true);
+            await axios.delete('/tarefas/' + taskId)
+            await requestTasks();
+        } catch (error) {
+            console.warn(error);
+            Modal.error({
+                title: "Não foi possível deletar a tarefa, tente novamente mais tarde."
+            })
+        } finally {
+            setLoading(false);
+        }
+    };
+    const renderDeleteTask = (deletar, task) => {
+        return (
+            <Button
+                onClick={() => {
+                    deleteTask(task.id);
+                }}
+            >
+                <DeleteOutlined  />
+            </Button>
+        )
+    }
+    
     return (
         <Content>
             <Row gutter={[24, 24]} justify="center">
@@ -81,7 +108,7 @@ const TaskListPage = () => {
                             dataIndex="categoria"
                             key="categoria"
                             render={renderCategoria}
-                        />  
+                        />
                         <Column
                             title="Titulo"
                             dataIndex="titulo"
@@ -100,6 +127,12 @@ const TaskListPage = () => {
                             dataIndex="concluida"
                             key="concluida"
                             render={renderCompleteTask}
+                        />
+                        <Column
+                            title="Deletar"
+                            dataIndex="deletar"
+                            key="deletar"
+                            render={renderDeleteTask}
                         />
                     </Table>
                 </Col>

@@ -1,39 +1,45 @@
 import {
-    Button, Card, Input,
+    Button, Card,
     Col, Form, Layout, Row,
-    Typography, Modal, Checkbox
+    Typography, Modal, Checkbox,
 } from 'antd';
+//   import { Link, useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 import axios from 'axios';
 
 import InputText from '../components/InputText';
+import InputSelect from '../components/InputSelect';
 import { validateTitulo } from '../helpers/validation-helper';
+import { useEffect } from 'react/cjs/react.development';
 
 
-const { Content} = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 
-
 const TaskCreatePage = () => {
-    const [formValues, setFormValues] = useState({concluida: false, titulo: ''});
+    // const navigate = useNavigate();
+    const [formValues, setFormValues] = useState({ concluida: false, titulo: '' })
     const [loading, setLoading] = useState(false);
+    const [loadingCategories, setLoadingCategories] = useState(false);
+    const [categoriesOptions, setCategoriesOptions] = useState([]);
 
     const handleSubscription = useCallback(async () => {
         try {
             setLoading(true);
-            // console.log({ formValues });
+
             const { titulo, concluida, categoria_id } = formValues;
-            // console.log(titulo, concluida);
+
             if (!titulo) return;
 
             const body = {
                 titulo: titulo,
+                categoria_id: categoria_id,
                 concluida: concluida,
-                categoria_id: categoria_id
             }
+
             await axios.post('/tarefas', body);
             Modal.success({
-                title: 'Tarefa cadastrada com sucesso.',
+                title: 'Tarefa cadastrada com success',
             })
         } catch (error) {
             console.warn(error);
@@ -44,39 +50,60 @@ const TaskCreatePage = () => {
                 });
             } else {
                 Modal.error({
-                    title: 'Não foi possível cadastrar, tente novamente mais tarde.'
+                    title: 'Não foi possível criar a tarefa'
                 })
             }
         } finally {
             setLoading(false);
-        }
+        };
     }, [formValues]);
+
+    const loadCategoriesOptions = useCallback(async () => {
+        try {
+            setLoadingCategories(true);
+            const { data } = await axios.get('/tarefas/categorias');
+            setCategoriesOptions(data.map(category => ({
+                value: category.id,
+                title: category.nome,
+            })))
+        } catch (error) {
+            console.warn(error);
+        } finally {
+            setLoadingCategories(false);
+        };
+    }, []);
 
     const handleInputChange = useCallback((event) => {
         const { value } = event.target;
-        // console.log({titulo,value});
+
         setFormValues({
             ...formValues,
             titulo: value,
         })
     }, [formValues]);
-    const handleInputChangeCategory = useCallback((event) => {
+
+    const handleInputChangeCategoria = useCallback((event) => {
         const { value } = event.target;
-        // console.log({titulo,value});
+
         setFormValues({
             ...formValues,
             categoria_id: value,
         })
-    }, [formValues]);
+    }, [formValues])
 
     const handleInputCheckbox = useCallback((event) => {
         const { checked } = event.target;
-        console.log(checked);
+        console.log({ checked })
         setFormValues({
             ...formValues,
             concluida: checked,
         })
-    }, [formValues])
+    }, [formValues]);
+
+    useEffect(() => {
+        loadCategoriesOptions();
+    }, []);
+
 
     return (
         <Content>
@@ -87,38 +114,45 @@ const TaskCreatePage = () => {
                     <Card style={{ margin: 24 }}>
                         <Title
                             level={3}
-                            type="primary"
+                            type="secundary"
                             style={{ textAlign: 'center', marginTop: 8 }}
                         >
-                            Cadastrar tarefa
+                            Cadastre sua tarefa
                         </Title>
+
                         <Form layout="vertical">
-                                <InputText
-                                    name="titulo"
-                                    label="Titulo"
-                                    size="large"
-                                    onChange={handleInputChange}
-                                    validate={validateTitulo}
-                                    disabled={loading}
-                                    required
-                                />
+                            <InputText
+                                name="titulo"
+                                label="Titulo"
+                                size="large"
+                                onChange={handleInputChange}
+                                validate={validateTitulo}
+                                disable={loading}
+                                required
+                            />
+
+                            <InputSelect
+                                name="categoria_id"
+                                label="Categoria"
+                                size="large"
+                                onChange={handleInputChangeCategoria}
+                                disable={loading || loadingCategories}
+                                options={categoriesOptions}
+                            />
+
+                            <div style={{
+                                marginBottom: '20px',
+                                textAlign: 'center',
+                            }}>
                                 <Checkbox
                                     title="Concluida"
                                     dataIndex="concluida"
                                     key="concluida"
                                     onChange={handleInputCheckbox}
-                                // render={}
                                 >
                                     Concluida
                                 </Checkbox>
-                            <Input
-                                name="categoria_id"
-                                label="Id da Categoria"
-                                size="large"
-                                onChange={handleInputChangeCategory}
-                                validate={validateTitulo}
-                                disabled={loading}
-                            />
+                            </div>
 
                             <Button
                                 block
@@ -127,8 +161,9 @@ const TaskCreatePage = () => {
                                 onClick={handleSubscription}
                                 loading={loading}
                             >
-                                Cadastrar
+                                Cadastrar tarefa
                             </Button>
+
                         </Form>
                     </Card>
                 </Col>
