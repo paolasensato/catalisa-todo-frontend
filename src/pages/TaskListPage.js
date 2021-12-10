@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Layout, Row, Col, Table, Modal, Button} from "antd";
+import { Layout, Row, Col, Table, Modal, Button, Popconfirm} from "antd";
 import { DeleteOutlined } from '@ant-design/icons';
 import axios from "axios";
 const { Content} = Layout;
@@ -76,18 +76,23 @@ const TaskListPage = () => {
             setLoading(false);
         }
     };
-    const renderDeleteTask = (deletar, task) => {
+    const renderDeleteTask = (task) => {
         return (
-            <Button
-                onClick={() => {
+            <Popconfirm
+                onConfirm={() => {
                     deleteTask(task.id);
                 }}
+                okText="Excluir"
+                okType="danger"
+                cancelText="Cancelar"
+                title="Deseja sair do sistema?"
             >
-                <DeleteOutlined  />
-            </Button>
-        )
-    }
-
+                <Button>
+                    <DeleteOutlined />
+                </Button>
+            </Popconfirm >
+        );
+    };
 
     return (
         <Content>
@@ -130,9 +135,8 @@ const TaskListPage = () => {
                             render={renderCompleteTask}
                         />
                         <Column
-                            title="Deletar"
-                            dataIndex="deletar"
-                            key="deletar"
+                            title="Excluir"
+                            key="excluir"
                             render={renderDeleteTask}
                         />
                     </Table>
